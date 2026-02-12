@@ -23,7 +23,46 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
+/* Vision Gradient Text */
+.vision-gradient {
+    background: linear-gradient(to right, #c084fc, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /* Subtle Background Glow */
 .glow-bg {
     background: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+}
+
+/* Mission & Vision Cards */
+.mission-vision-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-vision-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, #6366f1, #c084fc);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.mission-vision-card:hover::before {
+    opacity: 1;
+}
+
+/* Mission Tags Animation */
+.mission-tag {
+    transition: all 0.3s ease;
+}
+
+.mission-tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
 }
