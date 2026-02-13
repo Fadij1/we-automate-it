@@ -316,20 +316,20 @@
                     <p class="text-slate-400">Tell us about your manual processes. We'll tell you how to automate them.</p>
                 </div>
 
-                <form class="space-y-4" onsubmit="event.preventDefault(); alert('Thanks for reaching out! Since this is a demo site, no email was sent, but this form is ready for backend integration.');">
+                <form class="space-y-4" onsubmit="handleSubmit(event)">
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                        <input type="text" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="John Doe">
+                        <input type="text" id="name" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="John Doe">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                        <input type="email" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="john@company.com">
+                        <input type="email" id="email" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="john@company.com">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">How can we help?</label>
-                        <textarea rows="4" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="I spend too much time copying data from..."></textarea>
+                        <textarea id="message" rows="4" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="I spend too much time copying data from..."></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-brand-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 text-white font-bold py-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition duration-200">
+                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 text-white font-bold py-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition duration-200">
                         Send Message
                     </button>
                 </form>
@@ -343,7 +343,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
                     <span class="text-xl font-bold text-white">We Automate <span class="text-brand-glow">It</span></span>
-                    <p class="text-slate-500 text-sm mt-2">© 2024 We Automate It. All rights reserved.</p>
+                    <p class="text-slate-500 text-sm mt-2">© 2026 We Automate It. All rights reserved.</p>
                 </div>
                 
                 <div class="flex space-x-6">

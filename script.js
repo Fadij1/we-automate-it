@@ -55,3 +55,50 @@ const missionSection = document.getElementById('mission-vision');
 if (missionSection) {
     missionVisionObserver.observe(missionSection);
 }
+
+// --- NEW: Form Submission Logic ---
+async function handleSubmit(event) {
+    event.preventDefault(); // Stop page reload
+
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerText;
+    
+    // Show loading state
+    btn.innerText = 'Sending...';
+    btn.disabled = true;
+
+    // Collect data
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value,
+        timestamp: new Date().toISOString()
+    };
+
+    // Your Production n8n URL
+    const webhookUrl = 'https://n8n.we-automate-it.me/webhook-test/contact-form';
+
+    try {
+        const response = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            alert('Message received! We will be in touch shortly.');
+            event.target.reset(); // Clear form
+        } else {
+            alert('Error sending message. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Something went wrong. Please check your connection.');
+    } finally {
+        // Restore button
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
