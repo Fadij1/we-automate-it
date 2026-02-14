@@ -38,7 +38,6 @@
 </head>
 <body class="antialiased overflow-x-hidden">
 
-    <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-brand-dark/90 backdrop-blur-md border-b border-white/10">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="text-xl font-bold tracking-tight">
@@ -71,7 +70,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center pt-20 glow-bg">
         <div class="container mx-auto px-6 text-center z-10">
             <div class="reveal">
@@ -97,7 +95,6 @@
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="services" class="py-24 bg-brand-dark">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16 reveal">
@@ -149,7 +146,6 @@
         </div>
     </section>
 
-    <!-- Mission & Vision Section -->
     <section id="mission-vision" class="py-24 bg-brand-dark relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
             <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -165,7 +161,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <!-- Mission Card -->
                 <div class="mission-vision-card p-8 md:p-10 bg-brand-card rounded-2xl border border-white/5 hover:border-brand-accent/50 transition duration-500 group reveal">
                     <div class="flex items-center mb-6">
                         <div class="w-14 h-14 bg-indigo-500/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition duration-300">
@@ -183,7 +178,6 @@
                     </div>
                 </div>
 
-                <!-- Vision Card -->
                 <div class="mission-vision-card p-8 md:p-10 bg-brand-card rounded-2xl border border-white/5 hover:border-purple-500/50 transition duration-500 group reveal">
                     <div class="flex items-center mb-6">
                         <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition duration-300">
@@ -204,7 +198,6 @@
         </div>
     </section>
 
-    <!-- How It Works Section -->
     <section id="process" class="py-24 bg-brand-card border-y border-white/5">
         <div class="container mx-auto px-6">
             <div class="text-center mb-16 reveal">
@@ -235,7 +228,6 @@
         </div>
     </section>
 
-    <!-- Why Us Section -->
     <section id="why-us" class="py-24 bg-brand-dark">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -293,7 +285,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section class="py-20 bg-brand-card/50">
         <div class="container mx-auto px-6 text-center reveal">
             <h2 class="text-2xl font-bold mb-4">About We Automate It</h2>
@@ -303,7 +294,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="py-24 bg-brand-dark relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
             <div class="absolute -top-24 -right-24 w-96 h-96 bg-brand-accent/10 rounded-full blur-3xl"></div>
@@ -316,28 +306,30 @@
                     <p class="text-slate-400">Tell us about your manual processes. We'll tell you how to automate them.</p>
                 </div>
 
-                <form class="space-y-4" onsubmit="handleSubmit(event)">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                        <input type="text" id="name" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="John Doe">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                        <input type="email" id="email" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="john@company.com">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">How can we help?</label>
-                        <textarea id="message" rows="4" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="I spend too much time copying data from..."></textarea>
-                    </div>
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 text-white font-bold py-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition duration-200">
-                        Send Message
-                    </button>
-                </form>
+                <form class="space-y-4"> <div>
+					<label class="block text-sm font-medium text-slate-300 mb-1">Name</label>
+					<input type="text" id="name" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="John Doe">
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-slate-300 mb-1">Email</label>
+						<input type="email" id="email" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="john@company.com">
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
+						<input type="tel" id="phone" class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="+1 (555) 000-0000">
+					</div>
+					<div>
+						<label class="block text-sm font-medium text-slate-300 mb-1">How can we help?</label>
+						<textarea id="message" rows="4" required class="w-full bg-brand-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition" placeholder="I spend too much time copying data from..."></textarea>
+					</div>
+					<button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-brand-accent to-indigo-600 hover:from-indigo-500 hover:to-indigo-700 text-white font-bold py-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition duration-200">
+						Send Message
+					</button>
+				</form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="bg-black py-12 border-t border-white/10">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">

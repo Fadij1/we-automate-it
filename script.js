@@ -1,3 +1,6 @@
+console.log('hello');
+
+
 // Mobile Menu Toggle
 const menuBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -56,8 +59,9 @@ if (missionSection) {
     missionVisionObserver.observe(missionSection);
 }
 
-// --- NEW: Form Submission Logic ---
+// --- Form Submission Logic ---
 async function handleSubmit(event) {
+	console.log('i am in handle submit function');
     event.preventDefault(); // Stop page reload
 
     const btn = document.getElementById('submitBtn');
@@ -71,12 +75,13 @@ async function handleSubmit(event) {
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value, // Added phone number field
         message: document.getElementById('message').value,
         timestamp: new Date().toISOString()
     };
 
     // Your Production n8n URL
-    const webhookUrl = 'https://n8n.we-automate-it.me/webhook-test/contact-form';
+    const webhookUrl = 'https://n8n.we-automate-it.me/webhook/contact-form';
 
     try {
         const response = await fetch(webhookUrl, {
@@ -101,4 +106,10 @@ async function handleSubmit(event) {
         btn.innerText = originalText;
         btn.disabled = false;
     }
+}
+
+// Attach the listener directly to the form to ensure it is reachable
+const contactForm = document.querySelector('form');
+if (contactForm) {
+    contactForm.addEventListener('submit', handleSubmit);
 }
