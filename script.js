@@ -1,6 +1,3 @@
-console.log('hello');
-
-
 // Mobile Menu Toggle
 const menuBtn = document.getElementById('mobile-menu-btn');
 const mobileMenu = document.getElementById('mobile-menu');
@@ -61,7 +58,6 @@ if (missionSection) {
 
 // --- Form Submission Logic ---
 async function handleSubmit(event) {
-	console.log('i am in handle submit function');
     event.preventDefault(); // Stop page reload
 
     const btn = document.getElementById('submitBtn');
@@ -162,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Call Backend API
-            const response = await fetch('http://localhost:5000/api/chat', {
+            const response = await fetch('https://api.we-automate-it.me/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })

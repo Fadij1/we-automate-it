@@ -4,11 +4,14 @@ import google.generativeai as genai
 import os
 
 # Configure your Gemini API key
-API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyBZK2CBqMOXfoy4Cvx1hMMGE4qT7w25VAk") #AIzaSyBC6d1mLaorwCDsG6ipDaD5vvS5OnyTVwY
+API_KEY = os.getenv("GEMINI_API_KEY")
+if not API_KEY:
+    print("WARNING: GEMINI_API_KEY not found in environment variables.")
+
 genai.configure(api_key=API_KEY)
 
 # Create the model and chat session
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-1.5-flash")
 # Define the website knowledge base
 website_context = """
 --- COMPANY INFO ---
@@ -59,7 +62,11 @@ chat = model.start_chat(
             "   - Internal Tools\n"
             "   What are you interested in?\n"
             "3. SPECIFIC INQUIRIES: If the user asks about a specific service or topic, explain it briefly using the Context Information.\n"
-            "4. CALL TO ACTION: At the end of every response (except 'help' requests), suggest the user fill out the form by appending this HTML EXACTLY:\n"
+            "4. CALL TO ACTION (SMART): Add the contact button ONLY when it makes sense — "
+            "for example when the user shows buying intent, asks about pricing, requests a demo, "
+            "asks how to start, or finishes discussing a service. "
+            "DO NOT add the button for greetings, thanks, small talk, or simple informational questions. "
+            "When needed, append this HTML EXACTLY:\n"
             "   <br><br><a href='#contact' class='chat-action-btn' onclick='document.getElementById(\"chat-interface\").classList.remove(\"active\")'>Book a Call Now</a>\n"
             "5. DISTRESS/HELP: If the user asks for 'help' (e.g., 'help me', 'I need support'), respond ONLY with: 'Please contact us at fadijohn9@gmail.com'.\n"
             "6. NO HALLUCINATIONS: Do not make up info not found in the Context Information."
@@ -69,6 +76,7 @@ chat = model.start_chat(
 )
 
 app = Flask(__name__)
+# Allow requests ONLY from your website
 CORS(app, resources={r"/*": {"origins": ["https://we-automate-it.me", "https://www.we-automate-it.me"]}})  # Allow requests from your frontend
 
 @app.route('/api/chat', methods=['POST'])
