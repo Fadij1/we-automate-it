@@ -7,7 +7,6 @@ if (menuBtn && mobileMenu) {
         mobileMenu.classList.toggle('hidden');
     });
 
-    // Close mobile menu when clicking a link
     document.querySelectorAll('#mobile-menu a').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.add('hidden');
@@ -38,7 +37,6 @@ document.querySelectorAll('.reveal').forEach(el => {
 const missionVisionObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            // Add a staggered delay based on card position
             const cards = entry.target.closest('#mission-vision').querySelectorAll('.mission-vision-card');
             cards.forEach((card, i) => {
                 setTimeout(() => {
@@ -50,33 +48,49 @@ const missionVisionObserver = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.2 });
 
-// Observe the mission-vision section
 const missionSection = document.getElementById('mission-vision');
 if (missionSection) {
     missionVisionObserver.observe(missionSection);
 }
 
+// Staggered animation for Service cards
+const servicesSection = document.getElementById('services');
+if (servicesSection) {
+    const serviceObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const cards = servicesSection.querySelectorAll('.group.reveal');
+                cards.forEach((card, i) => {
+                    setTimeout(() => {
+                        card.classList.add('active');
+                    }, i * 150);
+                });
+                serviceObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    serviceObserver.observe(servicesSection);
+}
+
 // --- Form Submission Logic ---
 async function handleSubmit(event) {
-    event.preventDefault(); // Stop page reload
+    event.preventDefault();
 
     const btn = document.getElementById('submitBtn');
     const originalText = btn.innerText;
     
-    // Show loading state
     btn.innerText = 'Sending...';
     btn.disabled = true;
 
-    // Collect data
     const formData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value, // Added phone number field
+        phone: document.getElementById('phone').value,
         message: document.getElementById('message').value,
         timestamp: new Date().toISOString()
     };
 
-    // Your Production n8n URL
     const webhookUrl = 'https://n8n.we-automate-it.me/webhook/contact-form';
 
     try {
@@ -90,7 +104,7 @@ async function handleSubmit(event) {
 
         if (response.ok) {
             alert('Message received! We will be in touch shortly.');
-            event.target.reset(); // Clear form
+            event.target.reset();
         } else {
             alert('Error sending message. Please try again.');
         }
@@ -98,13 +112,11 @@ async function handleSubmit(event) {
         console.error('Error:', error);
         alert('Something went wrong. Please check your connection.');
     } finally {
-        // Restore button
         btn.innerText = originalText;
         btn.disabled = false;
     }
 }
 
-// Attach the listener directly to the form to ensure it is reachable
 const contactForm = document.querySelector('form');
 if (contactForm) {
     contactForm.addEventListener('submit', handleSubmit);
@@ -123,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isChatOpen = false;
 
-    // Toggle chat
     if (chatbotButton) {
         chatbotButton.addEventListener('click', () => {
             if (!isChatOpen) {
@@ -144,20 +155,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Send Message Logic
     async function sendMessage() {
         const message = chatInput.value.trim();
         if (!message) return;
 
-        // Add user message
         addMessage(message, 'user');
         chatInput.value = '';
 
-        // Add typing indicator
         addTypingIndicator();
 
         try {
-            // Call Backend API
             const response = await fetch('https://api.we-automate-it.me/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -179,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event Listeners for Sending
     if (sendButton) {
         sendButton.addEventListener('click', sendMessage);
     }
@@ -190,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // UI Helper: Add Message
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}-message`;
@@ -209,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // UI Helper: Typing Indicator
     function addTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message bot-message typing-indicator';
