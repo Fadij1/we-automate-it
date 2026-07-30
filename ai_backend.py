@@ -2,6 +2,15 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import google.generativeai as genai
 import os
+import pandas as pd
+from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure your Gemini API key
 API_KEY = os.getenv("GEMINI_API_KEY")
@@ -90,6 +99,74 @@ def chat_api():
         response = chat.send_message(user_message)
         return jsonify({"status": "success", "response": response.text})
     except Exception as e:
+        return jsonify({"status": "error", "error": str(e)}), 500
+
+def send_notification_email(name, email, phone, user_message):
+    sender_email = os.getenv("SENDER_EMAIL")
+    sender_password = os.getenv("SENDER_PASSWORD")
+    receiver_email = os.getenv("RECEIVER_EMAIL")
+
+    if not sender_email or not sender_password or not receiver_email:
+        print("WARNING: Email credentials not fully set in .env. Skipping email notification.")
+        return
+
+    subject = f"New Contact Form Submission from {name}"
+    body = f"You have received a new contact form submission.\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:\n{user_message}"
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, receiver_email, text)
+        server.quit()
+        print("Notification email sent successfully.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+@app.route('/api/contact', methods=['POST'])
+def contact_api():
+    try:
+        data = request.json
+        name = data.get('name', '')
+        email = data.get('email', '')
+        phone = data.get('phone', '')
+        message = data.get('message', '')
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        if not name or not email or not message:
+            return jsonify({"status": "error", "error": "Name, email, and message are required"}), 400
+
+        # Save to Excel
+        excel_file = "contacts.xlsx"
+        new_entry = pd.DataFrame([{
+            "Date": timestamp,
+            "Name": name,
+            "Email": email,
+            "Phone": phone,
+            "Message": message
+        }])
+
+        if os.path.exists(excel_file):
+            df = pd.read_excel(excel_file)
+            df = pd.concat([df, new_entry], ignore_index=True)
+        else:
+            df = new_entry
+
+        df.to_excel(excel_file, index=False)
+
+        # Send Email Notification
+        send_notification_email(name, email, phone, message)
+
+        return jsonify({"status": "success", "message": "Form submitted successfully"})
+    except Exception as e:
+        print(f"Error in /api/contact: {e}")
         return jsonify({"status": "error", "error": str(e)}), 500
 
 @app.route('/health', methods=['GET'])

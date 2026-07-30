@@ -91,7 +91,7 @@ async function handleSubmit(event) {
         timestamp: new Date().toISOString()
     };
 
-    const webhookUrl = 'https://n8n.we-automate-it.me/webhook/contact-form';
+    const webhookUrl = 'https://api.we-automate-it.me/api/contact';
 
     try {
         const response = await fetch(webhookUrl, {
