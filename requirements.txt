@@ -1,6 +1,7 @@
-Flask
+flask
 flask-cors
 google-generativeai
 pandas
 openpyxl
 python-dotenv
+numpy
