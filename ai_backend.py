@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+import json
 import pandas as pd
 from datetime import datetime
 import smtplib
@@ -145,8 +146,7 @@ def chat_api():
 
 def sync_to_online_excel(name, email, phone, user_message, timestamp):
     """
-    Syncs booking submission live to an Online Cloud Excel / Google Sheets Webhook.
-    Configure ONLINE_EXCEL_WEBHOOK_URL in .env (e.g. Google Sheets AppScript or n8n webhook)
+    Syncs booking submission live to Google Sheets Webhook.
     """
     webhook_url = os.getenv("ONLINE_EXCEL_WEBHOOK_URL")
     if not webhook_url or webhook_url.startswith("your_"):
@@ -163,9 +163,14 @@ def sync_to_online_excel(name, email, phone, user_message, timestamp):
     }
 
     try:
-        res = requests.post(webhook_url, json=payload, timeout=8)
+        res = requests.post(
+            webhook_url,
+            data=json.dumps(payload),
+            headers={"Content-Type": "application/json"},
+            timeout=12
+        )
         if res.ok:
-            print("SUCCESS: Live booking data synced to Online Cloud Excel / Google Sheet!")
+            print(f"SUCCESS: Live booking data for '{name}' synced to Online Google Sheet!")
         else:
             print(f"WARNING: Cloud Excel Webhook responded with status {res.status_code}")
     except Exception as e:

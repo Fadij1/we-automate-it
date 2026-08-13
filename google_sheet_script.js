@@ -18,7 +18,7 @@
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
+
     // Ensure header row exists
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Timestamp", "Name", "Email", "Phone Number", "Message / Scope", "Source"]);
@@ -26,11 +26,11 @@ function doPost(e) {
     }
 
     var data = JSON.parse(e.postData.contents);
-    
+
     var timestamp = data.timestamp || new Date().toLocaleString();
     var name = data.name || "";
     var email = data.email || "";
-    var phone = data.phone || "";
+    var phone = data.phone ? "'" + data.phone : "";
     var message = data.message || "";
     var source = data.source || "We Automate It Website";
 
