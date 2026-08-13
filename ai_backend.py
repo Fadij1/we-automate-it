@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from datetime import datetime
 import smtplib
+import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
@@ -46,7 +47,7 @@ Description: We build custom high-performance web applications, autonomous AI ag
 - Own your data with secure private integrations.
 
 --- CONTACT ---
-Contact form at the bottom of the page or email [EMAIL_ADDRESS].
+Contact form at the bottom of the page or email your_receiver_email@gmail.com.
 """
         chat_session = model.start_chat(
             history=[
@@ -98,13 +99,13 @@ def fallback_knowledge_response(user_msg: str) -> str:
 
     if any(q in msg for q in ["contact", "book", "call", "talk", "hire", "email", "phone"]):
         return (
-            "You can reach our solution architects directly using the intake form at the bottom of this page or by emailing [EMAIL_ADDRESS].<br><br>"
+            "You can reach our solution architects directly using the intake form at the bottom of this page!<br><br>"
             "<a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
         )
 
     if any(q in msg for q in ["game", "demo", "pipeline", "sandbox", "test"]):
         return (
-            "You can play our interactive drag-and-drop games above! Test building an AI pipeline, matching solutions to bottlenecks, or simulating a custom tech stack.<br><br>"
+            "You can play our interactive drag-and-drop games above! Test building an n8n workflow, matching solutions to bottlenecks, or simulating a custom tech stack.<br><br>"
             "<a href='#games' class='chat-action-btn'>Play Interactive Demos</a>"
         )
 
@@ -142,10 +143,38 @@ def chat_api():
         bot_reply = fallback_knowledge_response(request.json.get('message', '') if request.json else '')
         return jsonify({"status": "success", "response": bot_reply})
 
+def sync_to_online_excel(name, email, phone, user_message, timestamp):
+    """
+    Syncs booking submission live to an Online Cloud Excel / Google Sheets Webhook.
+    Configure ONLINE_EXCEL_WEBHOOK_URL in .env (e.g. Google Sheets AppScript or n8n webhook)
+    """
+    webhook_url = os.getenv("ONLINE_EXCEL_WEBHOOK_URL")
+    if not webhook_url or webhook_url.startswith("your_"):
+        print("INFO: ONLINE_EXCEL_WEBHOOK_URL not set in .env. Skipping cloud Excel webhook sync.")
+        return
+
+    payload = {
+        "timestamp": timestamp,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "message": user_message,
+        "source": "We Automate It Website"
+    }
+
+    try:
+        res = requests.post(webhook_url, json=payload, timeout=8)
+        if res.ok:
+            print("SUCCESS: Live booking data synced to Online Cloud Excel / Google Sheet!")
+        else:
+            print(f"WARNING: Cloud Excel Webhook responded with status {res.status_code}")
+    except Exception as e:
+        print(f"WARNING: Error syncing to Online Cloud Excel Webhook ({e}). Local contacts.xlsx preserved.")
+
 def send_notification_email(name, email, phone, user_message):
     sender_email = os.getenv("SENDER_EMAIL")
     sender_password = os.getenv("SENDER_PASSWORD")
-    receiver_email = os.getenv("RECEIVER_EMAIL", "[EMAIL_ADDRESS]")
+    receiver_email = os.getenv("RECEIVER_EMAIL", "your_receiver_email@gmail.com")
 
     if not sender_email or not sender_password:
         print("WARNING: Email credentials not set in .env. Skipping email dispatch.")
@@ -183,7 +212,7 @@ def contact_api():
         if not name or not email or not message:
             return jsonify({"status": "error", "error": "Name, email, and message are required"}), 400
 
-        # Save to Excel
+        # 1. Save locally to Excel (contacts.xlsx)
         excel_file = "contacts.xlsx"
         new_entry = pd.DataFrame([{
             "Date": timestamp,
@@ -203,9 +232,14 @@ def contact_api():
             df = new_entry
 
         df.to_excel(excel_file, index=False)
+
+        # 2. Live Sync to Online Cloud Excel / Google Sheet Webhook
+        sync_to_online_excel(name, email, phone, message, timestamp)
+
+        # 3. Email Notification Dispatch
         send_notification_email(name, email, phone, message)
 
-        return jsonify({"status": "success", "message": "Form submitted successfully"})
+        return jsonify({"status": "success", "message": "Form submitted and synced successfully!"})
     except Exception as e:
         print(f"Error in /api/contact: {e}")
         return jsonify({"status": "error", "error": str(e)}), 500
