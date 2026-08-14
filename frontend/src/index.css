@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cinematic Sci-Fi: Sand & Copper Theme (DARK MODE) */
+    --bg-primary: #11100D;     /* Pitch dark warm charcoal */
+    --bg-secondary: #1A1814;   /* Deep warm charcoal */
+    --bg-elevated: #2A2825;    /* Bright matte surface */
+    
+    /* Typography */
+    --text-primary: #F2EFE9;   /* Warm light sand */
+    --text-secondary: #A69E93; /* Subdued sand */
+    --text-tertiary: #7D7466;  /* Darker sand */
+    
+    /* Borders & Dividers */
+    --border-subtle: #3D3A36;
+    --border-strong: #4D4944;
+    
+    /* Brand Colors - Spark Flow Cinematic */
+    --brand-dark: #11100D;     /* Dark matte surface */
+    --brand-light: #F2EFE9;    
+    
+    /* The "Spark" accent - SciFi Copper to Silver */
+    --spark-start: #D97736;    /* Deep Copper / Orange */
+    --spark-end: #C4A484;      /* Silver/Sand Gold */
+    
+    /* UI states */
+    --ui-success: #3E8E5A;
+    --ui-error: #D94436;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Constant ambient motion background */
+    background-image: radial-gradient(circle at 15% 50%, rgba(217, 119, 54, 0.03), transparent 25%),
+                      radial-gradient(circle at 85% 30%, rgba(196, 164, 132, 0.04), transparent 25%);
+    background-size: 200% 200%;
+    animation: ambientShift 20s ease-in-out infinite alternate;
+  }
+
+  /* Typography utilities */
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  /* Matte Panel: Replaces Glassmorphism */
+  .matte-panel {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    /* Sci-fi style precise inner and drop shadow */
+    box-shadow: 
+      0 4px 6px -1px rgba(26, 24, 20, 0.05), 
+      0 2px 4px -1px rgba(26, 24, 20, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .matte-panel:hover {
+    box-shadow: 
+      0 10px 15px -3px rgba(26, 24, 20, 0.08), 
+      0 4px 6px -2px rgba(26, 24, 20, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+  }
+
+  /* High contrast dark panels */
+  .dark-panel {
+    background-color: var(--brand-dark);
+    color: var(--brand-light);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* The subtle cinematic Spark Gradient for text */
+  .text-spark {
+    background: linear-gradient(135deg, var(--spark-start) 0%, var(--spark-end) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hide scrollbar completely but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Clean interactive buttons */
+  .btn-primary {
+    @apply bg-[#D97736] text-white px-6 py-3 rounded-full font-bold transition-all hover:bg-[#C46A2E] hover:shadow-lg hover:shadow-[#D97736]/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 border border-[#C46A2E]/50;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 rounded-full font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-black/10 flex items-center justify-center gap-2 border border-[rgba(255,255,255,0.05)];
+    background-color: var(--brand-dark);
+    color: var(--brand-light);
+  }
+  
+  .btn-secondary:hover {
+    background-color: #1A1814;
+  }
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}

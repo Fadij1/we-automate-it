@@ -1,0 +1,67 @@
+# ==========================================
+# 1. Security & Environment Variables
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+*.pem
+*.key
+*.cert
+*.secret
+
+# ==========================================
+# 2. Sensitive Client Data & Lead Databases
+# ==========================================
+contacts.xlsx
+*.xlsx
+*.xls
+*.csv
+*.db
+*.sqlite3
+
+# ==========================================
+# 3. Node.js & Vite Frontend Build Outputs
+# ==========================================
+node_modules/
+dist/
+dist-ssr/
+build/
+.cache/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# 4. Python Backend Cache & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+venv/
+.venv/
+env/
+ENV/
+
+# ==========================================
+# 5. OS & Editor System Files
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.log
+logs/
+*.tmp
+*.temp
