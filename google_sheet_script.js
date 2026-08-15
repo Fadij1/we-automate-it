@@ -7,7 +7,7 @@
  * 3. Delete any code in the editor, paste this entire file, and click Save (💾)
  * 4. Click Deploy -> New deployment
  * 5. Click the gear icon next to "Select type" -> Web app
- * 6. Set Description: "We Automate It Lead Intake"
+ * 6. Set Description: "Spark Flow Lead Intake"
  * 7. Set Execute as: "Me"
  * 8. Set Who has access: "Anyone"
  * 9. Click Deploy -> Authorize Access
@@ -32,7 +32,7 @@ function doPost(e) {
     var email = data.email || "";
     var phone = data.phone ? "'" + data.phone : "";
     var message = data.message || "";
-    var source = data.source || "We Automate It Website";
+    var source = data.source || "Spark Flow Website";
 
     sheet.appendRow([timestamp, name, email, phone, message, source]);
 
@@ -50,5 +50,5 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput("We Automate It - Google Sheets Webhook Engine is Active!");
+  return ContentService.createTextOutput("Spark Flow - Google Sheets Webhook Engine is Active!");
 }

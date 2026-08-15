@@ -11,14 +11,14 @@ export const RoiCalculator: React.FC = () => {
   const annualWastedHours = weeklyWastedHours * 52;
   const annualWastedCost = annualWastedHours * hourlyRate;
 
-  // Assuming We Automate It automates ~80% of repetitive tasks
+  // Assuming Spark Flow automates ~80% of repetitive tasks
   const annualSavings = Math.round(annualWastedCost * 0.8);
   const hoursReclaimed = Math.round(annualWastedHours * 0.8);
 
   return (
-    <section id="roi-calculator" className="py-24 bg-brand-darker relative overflow-hidden">
+    <section id="roi-calculator" className="py-16 bg-brand-darker relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-block py-1 px-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4">
             Interactive Simulator
           </span>
@@ -26,7 +26,7 @@ export const RoiCalculator: React.FC = () => {
             Calculate Your Business <span className="text-gradient">Savings</span>
           </h2>
           <p className="mt-4 text-slate-400 text-base sm:text-lg">
-            See how much time and money your team is currently losing on repetitive manual work—and how much you reclaim with We Automate It.
+            See how much time and money your team is currently losing on repetitive manual work—and how much you reclaim with Spark Flow.
           </p>
         </div>
 
@@ -142,13 +142,32 @@ export const RoiCalculator: React.FC = () => {
               </div>
             </div>
 
-            <a
-              href="#contact"
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition"
+            <button
+              onClick={() => {
+                const messageText = `We calculated an estimated annual savings of $${annualSavings.toLocaleString()}/yr and ${hoursReclaimed.toLocaleString()} hours reclaimed for our team of ${teamSize} employees (${hoursPerWeek} hrs/wk wasted on manual tasks at $${hourlyRate}/hr).\n\nWe would like to book a strategy call with Spark Flow to build custom AI workflows and claim these savings.`;
+                window.dispatchEvent(
+                  new CustomEvent('sparkflow:prefill_contact', {
+                    detail: {
+                      annualSavings,
+                      hoursReclaimed,
+                      teamSize,
+                      hoursPerWeek,
+                      hourlyRate,
+                      message: messageText,
+                      scope: 'ROI & Workflow Optimization',
+                    },
+                  })
+                );
+                const contactEl = document.getElementById('contact');
+                if (contactEl) {
+                  contactEl.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-bold text-sm shadow-lg shadow-emerald-500/25 transition cursor-pointer hover:shadow-cyan-500/30 active:scale-[0.98]"
             >
-              <span>Claim Your Automation Audit</span>
+              <span>Claim These Savings ($ {annualSavings.toLocaleString()}/yr)</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </button>
           </div>
         </div>
       </div>

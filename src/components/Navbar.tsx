@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Sparkles, Menu, X, ArrowRight, Zap, Volume2, VolumeX, Trophy } from 'lucide-react';
+import { Bot, Sparkles, Menu, X, ArrowRight, Zap, Volume2, VolumeX, Lock, ShieldCheck } from 'lucide-react';
 import { soundManager } from '../utils/audio';
 
-interface NavbarProps {
-  onOpenAchievements: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
+export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(() => {
+    try {
+      return localStorage.getItem('sparkflow_admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     setIsMuted(soundManager.getMutedStatus());
@@ -17,12 +20,48 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const handleAuthChange = (e: any) => {
+      setIsAdmin(!!e.detail?.isAdmin);
+    };
+    window.addEventListener('sparkflow:admin_auth_change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('sparkflow:admin_auth_change', handleAuthChange);
+    };
   }, []);
 
-  const handleToggleSound = () => {
-    const muted = soundManager.toggleMute();
-    setIsMuted(muted);
+  const [lowPowerMode, setLowPowerMode] = useState(() => {
+    try {
+      return localStorage.getItem('sparkflow_low_power_mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const toggleLowPower = () => {
+    soundManager.playPickupSound();
+    const next = !lowPowerMode;
+    setLowPowerMode(next);
+    try {
+      localStorage.setItem('sparkflow_low_power_mode', String(next));
+      window.dispatchEvent(new CustomEvent('sparkflow:toggle_low_power', { detail: { lowPower: next } }));
+    } catch {}
+
+    const msg = next
+      ? '🟢 Battery Saver Mode ON: 3D particles & cursor effects paused for maximum battery life.'
+      : '⚡ Performance Mode ON: All interactive 3D particle systems active.';
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const openBookingModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    soundManager.playPickupSound();
+    window.dispatchEvent(new CustomEvent('sparkflow:open_booking_modal'));
   };
 
   return (
@@ -50,7 +89,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
             </div>
             <div className="flex flex-col">
               <span className="font-display font-extrabold text-xl tracking-tight text-white flex items-center gap-1">
-                We Automate <span className="text-gradient">It</span>
+                Spark <span className="text-gradient">Flow</span>
               </span>
               <span className="text-[10px] tracking-widest text-slate-400 uppercase font-semibold -mt-1">
                 Web & AI Studio
@@ -60,15 +99,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-            <a href="#games" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5 py-1">
+            <a href="#ai-sandbox" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5 py-1">
               <Zap className="w-4 h-4 text-cyan-400" />
-              <span>Interactive Games</span>
-            </a>
-            <a href="#ai-sandbox" className="hover:text-purple-300 transition-colors py-1">
-              AI Sandbox
+              <span>AI Sandbox</span>
             </a>
             <a href="#services" className="hover:text-white transition-colors py-1">
               Services
+            </a>
+            <a href="#projects" className="hover:text-cyan-300 transition-colors py-1 font-semibold text-cyan-400">
+              Projects
+            </a>
+            <a href="#process" className="hover:text-white transition-colors py-1">
+              Process
             </a>
             <a href="#roi-calculator" className="hover:text-white transition-colors py-1">
               ROI Calculator
@@ -76,35 +118,62 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
             <a href="#case-studies" className="hover:text-white transition-colors py-1">
               Results
             </a>
+            <a href="#faq" className="hover:text-cyan-300 transition-colors py-1">
+              FAQ
+            </a>
           </nav>
 
           {/* Right Action Items */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2.5">
+            {/* Battery / Low Power Saver Mode */}
+            <button
+              onClick={toggleLowPower}
+              className={`p-2 rounded-xl border transition cursor-pointer ${
+                lowPowerMode
+                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-sm'
+                  : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border-white/10'
+              }`}
+              title={lowPowerMode ? 'Battery Saver Active (Particles Paused)' : 'Enable Battery Saver Mode'}
+            >
+              <Zap className={`w-4 h-4 ${lowPowerMode ? 'text-emerald-400 fill-emerald-400' : 'text-slate-400'}`} />
+            </button>
+
             {/* Audio Toggle Button */}
             <button
-              onClick={handleToggleSound}
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition"
-              title={isMuted ? 'Unmute Game Sounds' : 'Mute Game Sounds'}
+              onClick={() => {
+                const muted = soundManager.toggleMute();
+                setIsMuted(muted);
+              }}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition cursor-pointer"
+              title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
             >
               {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
             </button>
 
-            {/* Achievement Badges Button */}
+            {/* Book Strategy Call Button (1-Click Modal) */}
             <button
-              onClick={onOpenAchievements}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition"
+              onClick={openBookingModal}
+              className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-accent via-purple-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-indigo-500/25 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
             >
-              <Trophy className="w-3.5 h-3.5" />
-              <span>Achievements</span>
+              <span>Book Strategy Call</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
-            <a
-              href="#contact"
-              className="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-accent via-purple-600 to-indigo-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transition-all duration-200"
+            {/* Totally Hidden Stealth Admin Console Trigger */}
+            <button
+              onClick={() => {
+                soundManager.playPickupSound();
+                window.dispatchEvent(new CustomEvent('sparkflow:open_admin_modal'));
+              }}
+              tabIndex={-1}
+              className={
+                isAdmin
+                  ? 'p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm transition cursor-pointer'
+                  : 'w-4 h-4 opacity-0 cursor-default bg-transparent border-0 outline-none select-none pointer-events-auto'
+              }
             >
-              <span>Book a Strategy Call</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
+              {isAdmin && <ShieldCheck className="w-4 h-4 text-emerald-400 animate-pulse" />}
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -122,19 +191,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
       {mobileMenuOpen && (
         <div className="md:hidden glass-panel border-b border-white/10 px-6 py-6 mt-3 space-y-4 animate-in slide-in-from-top duration-200">
           <a
-            href="#games"
+            href="#ai-sandbox"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center gap-2 text-cyan-400 font-semibold py-2"
           >
             <Zap className="w-4 h-4" />
-            <span>Interactive Games 🎮</span>
-          </a>
-          <a
-            href="#ai-sandbox"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-slate-300 hover:text-white py-2"
-          >
-            AI Agent Sandbox
+            <span>AI Agent Sandbox</span>
           </a>
           <a
             href="#services"
@@ -142,6 +204,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
             className="block text-slate-300 hover:text-white py-2"
           >
             Services & Solutions
+          </a>
+          <a
+            href="#projects"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-cyan-300 font-semibold py-2"
+          >
+            Featured Projects
+          </a>
+          <a
+            href="#process"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-slate-300 hover:text-white py-2"
+          >
+            Process & Workflow
           </a>
           <a
             href="#roi-calculator"
@@ -157,18 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
           >
             Contact Us
           </a>
-          <div className="pt-2 flex flex-col gap-3">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenAchievements();
-              }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-bold"
-            >
-              <Trophy className="w-4 h-4" />
-              <span>View Unlocked Achievements</span>
-            </button>
-
+          <div className="pt-2">
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
@@ -177,6 +242,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenAchievements }) => {
               <span>Book a Call Now</span>
               <Sparkles className="w-4 h-4 text-cyan-300" />
             </a>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Battery Saver Toast Banner */}
+      {toastMessage && (
+        <div className="max-w-md mx-auto px-4 mt-3 animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-none">
+          <div className="p-3 rounded-xl bg-slate-950/95 border border-cyan-500/50 shadow-2xl shadow-cyan-950/50 text-xs font-semibold text-cyan-200 text-center backdrop-blur-xl flex items-center justify-center gap-2">
+            <span>{toastMessage}</span>
           </div>
         </div>
       )}

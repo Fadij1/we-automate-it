@@ -49,42 +49,132 @@ export const AgentSandbox: React.FC = () => {
       'Hello, I have prioritized invoice #8892 with our billing escalation lead. We have temporarily unlocked your dashboard access while we verify the transaction.',
   });
 
+  // Dynamic Intelligent Workflow Generator
   const handleGenerateWorkflow = () => {
     soundManager.playPickupSound();
     setLoading(true);
+
+    const inputLower = promptInput.toLowerCase();
+
+    // Contextual node generation based on user's custom prompt
+    let triggerTitle = 'Custom Webhook Trigger';
+    let triggerType = 'API Event';
+    let aiTitle = 'Gemini 1.5 Analysis';
+    let aiType = 'AI Cognitive Node';
+    let logicTitle = 'Logic Condition & Filter';
+    let logicType = 'Branching Rule';
+    let outputTitle = 'Multi-Platform Dispatch';
+    let outputType = 'Output Relay';
+
+    if (inputLower.includes('shopify') || inputLower.includes('refund') || inputLower.includes('ecommerce') || inputLower.includes('order')) {
+      triggerTitle = 'Shopify Order / Refund Webhook';
+      triggerType = 'E-Commerce Trigger';
+      aiTitle = 'Gemini Policy & Fraud Audit';
+      aiType = 'AI Verification';
+      logicTitle = 'Check Order Value & Return Window';
+      logicType = 'Conditional Branch';
+      outputTitle = 'QuickBooks Ledger & Customer Email';
+      outputType = 'ERP & CRM Sync';
+    } else if (inputLower.includes('lead') || inputLower.includes('sales') || inputLower.includes('crm') || inputLower.includes('form')) {
+      triggerTitle = 'Inbound Lead Form Webhook';
+      triggerType = 'Form Submission';
+      aiTitle = 'Gemini Lead Enrichment & ICP Score';
+      aiType = 'AI Scoring Engine';
+      logicTitle = 'Filter Score > 80 (High Intent)';
+      logicType = 'Priority Router';
+      outputTitle = 'HubSpot CRM + Slack Sales Alert';
+      outputType = 'Notification Relay';
+    } else if (inputLower.includes('invoice') || inputLower.includes('payment') || inputLower.includes('stripe') || inputLower.includes('bill')) {
+      triggerTitle = 'Stripe Payment / Invoice Event';
+      triggerType = 'Payment Webhook';
+      aiTitle = 'Gemini OCR & Line-Item Extractor';
+      aiType = 'AI Data Parser';
+      logicTitle = 'Validate Tax ID & Currency Rate';
+      logicType = 'Data Sanitation';
+      outputTitle = 'PostgreSQL DB + Accounting Sync';
+      outputType = 'Database Commit';
+    } else if (inputLower.includes('support') || inputLower.includes('ticket') || inputLower.includes('email') || inputLower.includes('customer')) {
+      triggerTitle = 'Inbound Zendesk / Email Trigger';
+      triggerType = 'Support Event';
+      aiTitle = 'Gemini Sentiment & Categorization';
+      aiType = 'NLP Classifier';
+      logicTitle = 'Urgency > 0.8 Escalation Filter';
+      logicType = 'SLA Router';
+      outputTitle = 'Draft AI Reply & Slack Escalation';
+      outputType = 'Auto-Responder';
+    } else {
+      triggerTitle = `Event Trigger: "${promptInput.slice(0, 24)}..."`;
+      triggerType = 'REST Webhook';
+      aiTitle = 'Gemini 1.5 Pro Semantic Processing';
+      aiType = 'AI Reasoning Agent';
+      logicTitle = 'n8n Business Logic & Data Transform';
+      logicType = 'Data Pipeline';
+      outputTitle = 'Automated Cloud Database & Notification';
+      outputType = 'Enterprise Sync';
+    }
+
     setTimeout(() => {
       soundManager.playSuccessChime();
       setGeneratedWorkflow([
-        { step: 1, title: 'Trigger Event Received', type: 'Custom Webhook', icon: 'FileText' },
-        { step: 2, title: 'AI Sentiment & Lead Audit', type: 'Gemini 1.5 Node', icon: 'Bot' },
-        { step: 3, title: 'n8n Data Transformer', type: 'Data Relay', icon: 'Zap' },
-        { step: 4, title: 'Database & Alert Sync', type: 'Output Dispatch', icon: 'CheckCircle2' },
+        { step: 1, title: triggerTitle, type: triggerType, icon: 'FileText' },
+        { step: 2, title: aiTitle, type: aiType, icon: 'Bot' },
+        { step: 3, title: logicTitle, type: logicType, icon: 'Zap' },
+        { step: 4, title: outputTitle, type: outputType, icon: 'CheckCircle2' },
       ]);
       setLoading(false);
     }, 600);
   };
 
+  // Dynamic Intelligent Support Ticket Triage
   const handleRunTriage = () => {
     soundManager.playPickupSound();
     setLoading(true);
+
+    const ticketLower = supportTicket.toLowerCase();
+
+    let priority = 'MEDIUM (NORMAL 🟡)';
+    let sentiment = 'NEUTRAL (0.15)';
+    let category = 'General Inquiry';
+    let reply =
+      'Thank you for reaching out. Our support agent has received your request and will follow up with you shortly.';
+
+    if (ticketLower.includes('fail') || ticketLower.includes('lock') || ticketLower.includes('urgent') || ticketLower.includes('down') || ticketLower.includes('error')) {
+      priority = 'HIGH (URGENT 🔴)';
+      sentiment = 'FRUSTRATED (-0.88)';
+      category = 'Critical Account / System Outage';
+      reply =
+        'Hello, our AI monitoring agent has immediately escalated this ticket to the on-call engineer. We have provisionally restored your workspace access while investigating the logs.';
+    } else if (ticketLower.includes('refund') || ticketLower.includes('charge') || ticketLower.includes('invoice') || ticketLower.includes('payment') || ticketLower.includes('bill')) {
+      priority = 'HIGH (FINANCIAL 💳)';
+      sentiment = 'CONCERNED (-0.55)';
+      category = 'Billing & Payment Escalation';
+      reply =
+        'Hello, we have located your payment record in our billing system. Our finance operations specialist has been assigned to process this resolution within 2 business hours.';
+    } else if (ticketLower.includes('feature') || ticketLower.includes('how to') || ticketLower.includes('setup') || ticketLower.includes('integrate')) {
+      priority = 'STANDARD (ROUTINE 🟢)';
+      sentiment = 'POSITIVE (+0.70)';
+      category = 'Product & API Integration';
+      reply =
+        'Hello! Here is the direct guide to integrate your API keys into the Spark Flow dashboard. Let us know if you need assistance configuring the webhooks.';
+    }
+
     setTimeout(() => {
       soundManager.playSuccessChime();
       setTriageResult({
-        priority: 'CRITICAL ⚡',
-        sentiment: 'URGENT (-0.92)',
-        category: 'Tier-1 Escalation',
-        reply:
-          'Our AI Agent has flagged this ticket for priority review. A support specialist has been dispatched with immediate resolution steps.',
+        priority,
+        sentiment,
+        category,
+        reply,
       });
       setLoading(false);
     }, 600);
   };
 
   return (
-    <section id="ai-sandbox" className="py-24 bg-brand-darker relative overflow-hidden">
+    <section id="ai-sandbox" className="py-16 bg-brand-darker relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-flex items-center gap-2 py-1 px-4 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-bold uppercase tracking-wider mb-4">
             <Sparkles className="w-4 h-4 text-purple-400" />
             <span>Live Interactive AI Agent Playground</span>

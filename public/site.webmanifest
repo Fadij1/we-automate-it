@@ -1,0 +1,23 @@
+{
+  "name": "Spark Flow - AI & Web Apps",
+  "short_name": "Spark Flow",
+  "description": "Bespoke high-performance web applications and autonomous AI agents to automate business growth.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

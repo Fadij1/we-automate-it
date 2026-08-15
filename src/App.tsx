@@ -1,70 +1,107 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { N8nWorkflowGame } from './components/games/N8nWorkflowGame';
-import { SolutionMatchmakerGame } from './components/games/SolutionMatchmakerGame';
-import { TechStackSimulatorGame } from './components/games/TechStackSimulatorGame';
+import { TechStackMarquee } from './components/TechStackMarquee';
 import { AgentSandbox } from './components/AgentSandbox';
+import { LivePipelineFlowchart } from './components/LivePipelineFlowchart';
+import { ProjectEstimatorWizard } from './components/ProjectEstimatorWizard';
 import { ServicesSection } from './components/ServicesSection';
+import { ProjectsShowcase } from './components/ProjectsShowcase';
 import { ProcessSection } from './components/ProcessSection';
 import { RoiCalculator } from './components/RoiCalculator';
 import { CaseStudies } from './components/CaseStudies';
+import { TestimonialsSection } from './components/TestimonialsSection';
+import { FaqSection } from './components/FaqSection';
 import { ContactSection } from './components/ContactSection';
 import { AiChatWidget } from './components/AiChatWidget';
-import { AchievementBadges } from './components/AchievementBadges';
+import { BookingModal } from './components/BookingModal';
+import { AdminAuthModal } from './components/AdminAuthModal';
+import { ScrollToTop } from './components/ScrollToTop';
 import { NeonCursorTrail } from './components/NeonCursorTrail';
 import { Footer } from './components/Footer';
-import { Gamepad2 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [achievementsOpen, setAchievementsOpen] = useState(false);
+  useEffect(() => {
+    // If URL already contains a hash on initial load, smoothly scroll to it and clean the URL
+    if (window.location.hash) {
+      const initialTarget = document.querySelector(window.location.hash);
+      if (initialTarget) {
+        setTimeout(() => {
+          const navOffset = 80;
+          const elementPosition = initialTarget.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }, 100);
+      }
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Global smooth-scroll handler for all anchor tags with clean URL preservation
+    const handleAnchorClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const targetId = href.slice(1);
+
+        if (!targetId) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+          return;
+        }
+
+        const el = document.getElementById(targetId);
+        if (el) {
+          const navOffset = 80;
+          const elementPosition = el.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth',
+          });
+        }
+
+        // Clean the browser address bar immediately so # hashes never clutter the URL
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-accent selection:text-white relative">
+    <div className="min-h-screen bg-brand-dark text-slate-100 font-sans selection:bg-brand-accent selection:text-white relative overflow-x-hidden">
       {/* Sci-Fi Neon Particle Cursor Follower */}
       <NeonCursorTrail />
 
       {/* Fixed Sticky Header */}
-      <Navbar onOpenAchievements={() => setAchievementsOpen(true)} />
+      <Navbar />
 
-      {/* Hero Section with Interactive 3D Canvas */}
+      {/* Hero Section */}
       <Hero />
 
-      {/* Interactive Drag & Drop Games Section */}
-      <section id="games" className="py-24 bg-brand-darker relative overflow-hidden">
-        <div className="absolute top-1/3 left-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      {/* Enterprise Tech Stack Infinite Marquee */}
+      <TechStackMarquee />
 
+      {/* Live AI Agent Interactive Sandbox & Architecture Flowchart */}
+      <AgentSandbox />
+
+      {/* Live Visual Pipeline Node Flowchart & Project Scope Estimator Wizard Container */}
+      <section className="py-12 bg-brand-darker relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-bold uppercase tracking-wider mb-4">
-              <Gamepad2 className="w-4 h-4 text-rose-400" />
-              <span>Interactive Game Playground</span>
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
-              Test Our Capabilities <span className="text-gradient">Hands-On</span>
-            </h2>
-            <p className="mt-4 text-slate-400 text-base sm:text-lg">
-              Build authentic n8n workflows, match solutions to business bottlenecks, and design custom tech stack architectures!
-            </p>
-          </div>
-
-          {/* Game 1: Authentic n8n Visual Workflow Creator */}
-          <N8nWorkflowGame />
-
-          {/* Game 2: Solution Matchmaker */}
-          <SolutionMatchmakerGame />
-
-          {/* Game 3: Tech Stack & Quote Simulator */}
-          <TechStackSimulatorGame />
+          <LivePipelineFlowchart />
+          <ProjectEstimatorWizard />
         </div>
       </section>
 
-      {/* Live AI Agent Interactive Sandbox */}
-      <AgentSandbox />
-
-      {/* Core Services */}
+      {/* Core Services & Capabilities */}
       <ServicesSection />
+
+      {/* Featured Projects & Client Deployments Showcase */}
+      <ProjectsShowcase />
 
       {/* Process & Mission Timeline */}
       <ProcessSection />
@@ -75,17 +112,26 @@ export const App: React.FC = () => {
       {/* Case Studies & Impact Metrics */}
       <CaseStudies />
 
-      {/* Project Intake Contact Section */}
+      {/* Client Testimonials & Social Proof Carousel */}
+      <TestimonialsSection />
+
+      {/* Interactive FAQ Accordion Section */}
+      <FaqSection />
+
+      {/* Project Intake & Contact Section */}
       <ContactSection />
 
-      {/* Floating Gemini AI Assistant Chatbot */}
+      {/* 1-Click Strategy Call Calendar Booking Modal */}
+      <BookingModal />
+
+      {/* Admin Authentication & Project Management Modal */}
+      <AdminAuthModal />
+
+      {/* Floating Spark Flow AI Assistant Robot */}
       <AiChatWidget />
 
-      {/* Achievements Modal Drawer */}
-      <AchievementBadges
-        isOpen={achievementsOpen}
-        onClose={() => setAchievementsOpen(false)}
-      />
+      {/* Circular Scroll Progress & Back to Top Button */}
+      <ScrollToTop />
 
       {/* Footer */}
       <Footer />

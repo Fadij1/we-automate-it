@@ -21,6 +21,22 @@ export const HeroCanvas3D: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
+    let isLowPower = false;
+    try {
+      isLowPower = localStorage.getItem('sparkflow_low_power_mode') === 'true';
+    } catch {}
+
+    const handleLowPowerChange = (e: any) => {
+      isLowPower = !!e.detail?.lowPower;
+      if (isLowPower) {
+        cancelAnimationFrame(animationFrameId);
+        ctx.clearRect(0, 0, width, height);
+      } else {
+        render();
+      }
+    };
+    window.addEventListener('sparkflow:toggle_low_power', handleLowPowerChange);
+
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
@@ -145,12 +161,34 @@ export const HeroCanvas3D: React.FC = () => {
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      // Draw a subtle static constellation frame without running the animation loop
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < Math.min(particles.length, 35); i++) {
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.5;
+        ctx.fill();
+      }
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('sparkflow:toggle_low_power', handleLowPowerChange);
+      };
+    }
+
+    if (!isLowPower) {
+      render();
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('sparkflow:toggle_low_power', handleLowPowerChange);
     };
   }, []);
 

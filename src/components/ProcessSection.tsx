@@ -27,10 +27,10 @@ const STEPS = [
 
 export const ProcessSection: React.FC = () => {
   return (
-    <section id="process" className="py-24 bg-brand-dark relative overflow-hidden">
+    <section id="process" className="py-16 bg-brand-dark relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-block py-1 px-4 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
             Proven Process
           </span>
@@ -43,7 +43,7 @@ export const ProcessSection: React.FC = () => {
         </div>
 
         {/* Process Timeline Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative mb-12">
           {STEPS.map((s, idx) => {
             const IconComponent = s.icon;
 

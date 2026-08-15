@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, X, Sparkles, User, RefreshCw, ChevronDown } from 'lucide-react';
 import { ChatMessage } from '../types';
+import { InteractiveRobot } from './InteractiveRobot';
 
 export const AiChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,13 +10,46 @@ export const AiChatWidget: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'msg-1',
-      text: "Hello! I'm the **We Automate It** AI Assistant. Ask me how custom web apps, AI agents, or n8n workflow automations can scale your business!",
+      text: "Hello! I'm the <strong>Spark Flow</strong> AI Assistant. Ask me how custom web apps, AI agents, or n8n workflow automations can scale your business!",
       sender: 'bot',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Markdown & Rich Code Formatter
+  const renderMarkdown = (rawText: string) => {
+    if (!rawText) return '';
+
+    let html = rawText;
+
+    // 1. Code blocks (```language ... ```)
+    html = html.replace(/```([a-zA-Z]*)\n([\s\S]*?)```/g, (_, lang, code) => {
+      const sanitized = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return `<div class="my-2 rounded-lg bg-slate-950/90 border border-cyan-500/20 overflow-hidden">
+        ${lang ? `<div class="bg-white/5 px-2.5 py-1 text-[10px] text-cyan-400 font-mono border-b border-white/10 uppercase tracking-wider">${lang}</div>` : ''}
+        <pre class="p-2.5 overflow-x-auto text-[11px] text-cyan-200 font-mono leading-relaxed"><code>${sanitized}</code></pre>
+      </div>`;
+    });
+
+    // 2. Inline code (`code`)
+    html = html.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-900 border border-cyan-500/30 text-cyan-300 font-mono text-xs">$1</code>');
+
+    // 3. Bold text (**text**)
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+
+    // 4. Italic text (*text*)
+    html = html.replace(/\*([^*]+)\*/g, '<em class="text-cyan-200">$1</em>');
+
+    // 5. Markdown Links [label](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 underline font-medium">$1</a>');
+
+    // 6. Bullet lists (- item or * item)
+    html = html.replace(/^[\*\-]\s+(.+)$/gm, '<div class="flex items-start gap-1.5 my-1 ml-1"><span class="text-cyan-400 mt-1">•</span><span>$1</span></div>');
+
+    return html;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -24,6 +58,17 @@ export const AiChatWidget: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, loading]);
+
+  // Minimize/close chat on ESC key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   const handleSend = async (customText?: string) => {
     const textToSend = customText || input;
@@ -48,7 +93,7 @@ export const AiChatWidget: React.FC = () => {
       });
 
       const data = await response.json();
-      const botResponseText = data.response || "We Automate It creates custom web apps, AI agents, and workflow automations to scale your business operations!";
+      const botResponseText = data.response || "Spark Flow creates custom web apps, AI agents, and workflow automations to scale your business operations!";
 
       const botMsg: ChatMessage = {
         id: `bot-${Date.now()}`,
@@ -61,7 +106,7 @@ export const AiChatWidget: React.FC = () => {
     } catch (err) {
       const errorMsg: ChatMessage = {
         id: `err-${Date.now()}`,
-        text: "We Automate It builds high-performance web applications and AI workflow agents.<br><br><a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>",
+        text: "Spark Flow builds high-performance web applications and AI workflow agents.<br><br><a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>",
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
@@ -73,20 +118,8 @@ export const AiChatWidget: React.FC = () => {
 
   return (
     <>
-      {/* Floating Chat Launcher Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative group p-4 rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white shadow-2xl shadow-indigo-500/40 hover:scale-105 transition-all duration-300 flex items-center justify-center"
-          aria-label="Open AI Assistant Chat"
-        >
-          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-cyan-400"></span>
-          </span>
-          {isOpen ? <X className="w-6 h-6" /> : <Bot className="w-6 h-6 group-hover:rotate-12 transition-transform" />}
-        </button>
-      </div>
+      {/* Interactive Physics Drag-and-Drop Robot Launcher */}
+      <InteractiveRobot isOpen={isOpen} onToggle={() => setIsOpen(!isOpen)} />
 
       {/* Chat Interface Drawer */}
       {isOpen && (
@@ -99,7 +132,7 @@ export const AiChatWidget: React.FC = () => {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
-                  We Automate It Assistant
+                  Spark Flow Assistant
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                 </h4>
                 <div className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
@@ -109,12 +142,18 @@ export const AiChatWidget: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-slate-400 hover:text-white p-1"
-            >
-              <ChevronDown className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10" title="Press ESC to close">
+                ESC
+              </span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition"
+                aria-label="Minimize Chat (ESC)"
+              >
+                <ChevronDown className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* Quick Prompt Pills */}
@@ -147,26 +186,24 @@ export const AiChatWidget: React.FC = () => {
                 className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
               >
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                    msg.sender === 'user'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                  }`}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.sender === 'user'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                    }`}
                 >
                   {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
 
                 <div className="flex flex-col gap-1 max-w-[82%]">
                   <div
-                    className={`p-3 rounded-2xl ${
-                      msg.sender === 'user'
-                        ? 'bg-indigo-600 text-white rounded-tr-none'
-                        : 'bg-slate-800/90 text-slate-200 border border-white/10 rounded-tl-none'
-                    }`}
+                    className={`p-3 rounded-2xl ${msg.sender === 'user'
+                      ? 'bg-indigo-600 text-white rounded-tr-none'
+                      : 'bg-slate-800/90 text-slate-200 border border-white/10 rounded-tl-none'
+                      }`}
                   >
                     <div
-                      className="whitespace-pre-line leading-relaxed chatbot-message-body"
-                      dangerouslySetInnerHTML={{ __html: msg.text }}
+                      className="leading-relaxed chatbot-message-body"
+                      dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
                     />
                   </div>
                   <span className="text-[10px] text-slate-500 px-1 font-mono">{msg.timestamp}</span>

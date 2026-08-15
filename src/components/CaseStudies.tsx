@@ -45,9 +45,9 @@ const CASE_STUDIES = [
 
 export const CaseStudies: React.FC = () => {
   return (
-    <section id="case-studies" className="py-24 bg-brand-dark relative overflow-hidden">
+    <section id="case-studies" className="py-16 bg-brand-dark relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-block py-1 px-4 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
             Proven Success Stories
           </span>
@@ -55,7 +55,7 @@ export const CaseStudies: React.FC = () => {
             Real Client Impact & <span className="text-gradient">Results</span>
           </h2>
           <p className="mt-4 text-slate-400 text-base sm:text-lg">
-            See how We Automate It transformed operations and unlocked massive ROI for industry leaders.
+            See how Spark Flow transformed operations and unlocked massive ROI for industry leaders.
           </p>
         </div>
 

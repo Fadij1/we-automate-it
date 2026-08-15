@@ -66,10 +66,10 @@ const SERVICES = [
 
 export const ServicesSection: React.FC = () => {
   return (
-    <section id="services" className="py-24 bg-brand-dark relative overflow-hidden">
+    <section id="services" className="py-16 bg-brand-dark relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="inline-block py-1 px-4.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-4">
             Capabilities & Expertise
           </span>

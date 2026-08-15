@@ -1,10 +1,10 @@
 // Web Audio API Sound Synthesizer with Mute/Unmute State Management
 class SoundManager {
   private ctx: AudioContext | null = null;
-  private isMuted: boolean = false;
+  private isMuted: boolean = true;
 
   constructor() {
-    // Check saved mute preference if available
+    // Audio is muted by default to prevent startling visitors. Explicitly enabled only if saved as 'false'.
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('sound_muted');
       if (saved !== null) {
@@ -17,6 +17,7 @@ class SoundManager {
     this.isMuted = !this.isMuted;
     if (typeof window !== 'undefined') {
       localStorage.setItem('sound_muted', String(this.isMuted));
+      window.dispatchEvent(new CustomEvent('sparkflow:sound_mute_toggle', { detail: { isMuted: this.isMuted } }));
     }
     return this.isMuted;
   }

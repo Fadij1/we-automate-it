@@ -26,9 +26,9 @@ if API_KEY and API_KEY.strip() and API_KEY != "your_gemini_api_key_here":
         
         website_context = """
 --- COMPANY INFO ---
-Name: We Automate It
+Name: Spark Flow
 Tagline: Custom Web Apps & AI Workflow Automation Agency
-Description: We build custom high-performance web applications, autonomous AI agents, and n8n workflow automations so business owners can focus on growth.
+Description: We build custom high-performance web applications, autonomous AI agents, and automated workflow automations so business owners can focus on growth.
 
 --- SERVICES ---
 1. Workflow Automation: Seamlessly connect apps using n8n (email parsing, database updates, CRM sync).
@@ -47,8 +47,14 @@ Description: We build custom high-performance web applications, autonomous AI ag
 - Scale business output without hiring additional staff.
 - Own your data with secure private integrations.
 
+--- FAQ & ARCHITECTURE ---
+- Deployment Timeline: 1 to 3 weeks for most custom web apps, AI agents, and n8n workflows.
+- Code Ownership: Clients own 100% of source code, IP, API keys, and schemas with zero vendor lock-in.
+- Integrations: HubSpot, Salesforce, Slack, Gmail, PostgreSQL, Stripe, Shopify, QuickBooks, and REST/GraphQL APIs.
+- Supported AI Models: Google Gemini 1.5 Pro/Flash, OpenAI GPT-4o, Anthropic Claude 3.5 Sonnet, and private Local Llama 3.
+
 --- CONTACT ---
-Contact form at the bottom of the page or email your_receiver_email@gmail.com.
+Contact form at the bottom of the page, email sparkfloweg@gmail.com, or visit sparkflow-eg.com.
 """
         chat_session = model.start_chat(
             history=[
@@ -56,11 +62,14 @@ Contact form at the bottom of the page or email your_receiver_email@gmail.com.
                     f"Context Information:\n{website_context}\n\n"
                     "BEHAVIORAL INSTRUCTIONS:\n"
                     "1. Provide concise, friendly, helpful answers.\n"
-                    "2. Explain how We Automate It creates custom web apps, AI agents, and n8n workflows.\n"
-                    "3. Append this HTML button when the user asks about pricing, booking, or how to get started:\n"
+                    "2. Explain how Spark Flow creates custom web apps, AI agents, and n8n workflows.\n"
+                    "3. If asked about timeline: Answer 1–3 weeks for deployment.\n"
+                    "4. If asked about IP/Code ownership: Answer clients own 100% of code and data.\n"
+                    "5. If asked about integrations or AI models: Detail our support for Gemini, GPT-4o, Claude 3.5, Llama, HubSpot, Shopify, Slack, etc.\n"
+                    "6. Append this HTML button when the user asks about pricing, booking, or how to get started:\n"
                     "   <br><br><a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
                 ]},
-                {"role": "model", "parts": ["Understood. I will answer concisely and provide guidance on custom web apps, AI agents, and workflow automations."]}
+                {"role": "model", "parts": ["Understood. I will answer concisely and provide guidance on custom web apps, AI agents, timeline, IP ownership, and workflow automations."]}
             ]
         )
         gemini_available = True
@@ -74,9 +83,39 @@ else:
 def fallback_knowledge_response(user_msg: str) -> str:
     msg = user_msg.lower().strip()
 
+    # FAQ 1: Timeline
+    if any(q in msg for q in ["how fast", "how long", "timeline", "time to build", "delivery time", "turnaround"]):
+        return (
+            "Most custom web apps, AI agents, and n8n workflow systems are fully architected, tested, and deployed in **1 to 3 weeks**! "
+            "We prioritize rapid, high-impact agile delivery.<br><br>"
+            "<a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
+        )
+
+    # FAQ 2: Ownership & IP
+    if any(q in msg for q in ["own", "ownership", "ip", "intellectual property", "source code", "vendor lock", "license"]):
+        return (
+            "**Yes, you own 100% of the code and IP**. You receive full source code, database schemas, and API pipelines with zero vendor lock-in. "
+            "Everything runs securely in your own private cloud infrastructure.<br><br>"
+            "<a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
+        )
+
+    # FAQ 3: Integrations
+    if any(q in msg for q in ["integrate", "integration", "hubspot", "slack", "postgres", "stripe", "shopify", "tools", "connect"]):
+        return (
+            "Yes! We build direct API integrations and n8n workflow relays that seamlessly connect **HubSpot, Salesforce, Slack, PostgreSQL, Stripe, Shopify, Gmail, and custom databases**.<br><br>"
+            "<a href='#contact' class='chat-action-btn'>Discuss Your Tech Stack</a>"
+        )
+
+    # FAQ 4: AI Models
+    if any(q in msg for q in ["model", "models", "gemini", "gpt", "claude", "llama", "llm", "ai tech"]):
+        return (
+            "We engineer systems using **Google Gemini 1.5 Pro/Flash**, **OpenAI GPT-4o**, **Claude 3.5 Sonnet**, and private on-premise **Meta Llama 3** models for strict data privacy.<br><br>"
+            "<a href='#contact' class='chat-action-btn'>Plan Your AI Stack</a>"
+        )
+
     if any(q in msg for q in ["help me", "how can this website help", "what do you do", "what is this site", "about", "how does it work"]):
         return (
-            "We Automate It empowers your business by building custom web applications, autonomous AI agents, and n8n workflow automations! "
+            "Spark Flow empowers your business by building custom web applications, autonomous AI agents, and n8n workflow automations! "
             "We eliminate repetitive manual work, automate data entry between your tools, and create custom web apps tailored to your brand.<br><br>"
             "<a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
         )
@@ -84,10 +123,10 @@ def fallback_knowledge_response(user_msg: str) -> str:
     if any(q in msg for q in ["service", "offer", "provide", "what can you build"]):
         return (
             "We specialize in 4 core solutions:<br>"
-            "1. 🌐 <b>Custom WebApp Development</b> (React, TypeScript, Next.js)<br>"
-            "2. 🤖 <b>Autonomous AI Agents & Chatbots</b> (GPT-4 & Gemini AI)<br>"
-            "3. ⚡ <b>n8n Workflow Automation</b> (Connecting 100+ platforms)<br>"
-            "4. 📊 <b>Internal Tools & Admin Dashboards</b><br><br>"
+            "1. <b>Custom WebApp Development</b> (React, TypeScript, Next.js)<br>"
+            "2. <b>Autonomous AI Agents & Chatbots</b> (GPT-4 & Gemini AI)<br>"
+            "3. <b>n8n Workflow Automation</b> (Connecting 100+ platforms)<br>"
+            "4. <b>Internal Tools & Admin Dashboards</b><br><br>"
             "Which solution fits your current project?"
         )
     
@@ -106,19 +145,19 @@ def fallback_knowledge_response(user_msg: str) -> str:
 
     if any(q in msg for q in ["game", "demo", "pipeline", "sandbox", "test"]):
         return (
-            "You can play our interactive drag-and-drop games above! Test building an n8n workflow, matching solutions to bottlenecks, or simulating a custom tech stack.<br><br>"
-            "<a href='#games' class='chat-action-btn'>Play Interactive Demos</a>"
+            "You can test our live AI Agent Sandbox above! Interact with lead qualifiers, content generators, and workflow automation agents.<br><br>"
+            "<a href='#ai-sandbox' class='chat-action-btn'>Try AI Sandbox</a>"
         )
 
     return (
-        "At **We Automate It**, we design custom full-stack web applications, AI autonomous agents, and n8n workflow relays that run your business on autopilot. "
+        "At **Spark Flow**, we design custom full-stack web applications, AI autonomous agents, and automated workflow relays that run your business on autopilot. "
         "How can we assist your team today?<br><br>"
         "<a href='#contact' class='chat-action-btn'>Book a Strategy Call Now</a>"
     )
 
 app = Flask(__name__)
 # Allow requests from production website and local development server
-CORS(app, resources={r"/*": {"origins": ["https://we-automate-it.me", "https://www.we-automate-it.me", "http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://localhost:5001", "http://127.0.0.1:5001"]}})
+CORS(app, resources={r"/*": {"origins": ["https://sparkflow-eg.com", "https://www.sparkflow-eg.com", "http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5000", "http://localhost:5001", "http://127.0.0.1:5001"]}})
 
 @app.route('/api/chat', methods=['POST'])
 def chat_api():
@@ -159,7 +198,7 @@ def sync_to_online_excel(name, email, phone, user_message, timestamp):
         "email": email,
         "phone": phone,
         "message": user_message,
-        "source": "We Automate It Website"
+        "source": "Spark Flow Website"
     }
 
     try:
@@ -252,7 +291,7 @@ def contact_api():
 @app.route('/', methods=['GET'])
 def root_index():
     return jsonify({
-        "service": "We Automate It - AI Backend API",
+        "service": "Spark Flow - AI Backend API",
         "status": "online",
         "gemini_active": gemini_available,
         "endpoints": {

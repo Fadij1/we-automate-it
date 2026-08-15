@@ -12,28 +12,53 @@
   h1, h2, h3, h4, .font-display {
     font-family: 'Outfit', sans-serif;
   }
+
+  /* Reset focus rings for mouse clicks, but provide prominent accessible focus rings for keyboard Tab navigation */
+  *:focus:not(:focus-visible) {
+    outline: none !important;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #06b6d4 !important;
+    outline-offset: 2px !important;
+  }
 }
 
 /* Ultra-Premium Glassmorphism & Neon Utilities */
 .glass-panel {
   background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-panel:hover {
   border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.25);
+}
+
+.glass-panel-glow {
+  background: rgba(15, 23, 42, 0.85);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(99, 102, 241, 0.1);
+}
+
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 .gradient-border-card {
   position: relative;
   border-radius: 1rem;
   background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .gradient-border-card::before {
@@ -42,29 +67,59 @@
   inset: -1px;
   border-radius: 1.05rem;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(6, 182, 212, 0.5), rgba(168, 85, 247, 0.5));
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.6), rgba(6, 182, 212, 0.6), rgba(168, 85, 247, 0.6));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #c084fc 0%, #6366f1 40%, #22d3ee 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-cyan {
   background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-rose {
   background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-vibrant {
+  background: linear-gradient(135deg, #ff007a 0%, #7928ca 40%, #00dfd8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sci-Fi Laser Border Keyframe Animation */
+@keyframes laserSweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.laser-border-animated {
+  background: linear-gradient(90deg, #6366f1, #06b6d4, #ec4899, #38bdf8, #6366f1);
+  background-size: 300% 300%;
+  animation: laserSweep 4s ease infinite;
 }
 
 /* Custom Scrollbar */
@@ -116,3 +171,30 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(6, 182, 212, 0.4);
 }
+
+/* Infinite Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
+/* Accessibility: Full Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

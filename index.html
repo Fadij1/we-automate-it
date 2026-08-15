@@ -1,26 +1,109 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/logo_without_background.jpeg" type="image/jpeg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
-    <title>We Automate It | Custom Web Apps & AI Workflow Agents</title>
-    <meta name="description" content="We build custom high-performance websites, full-stack web applications, and intelligent AI agents to automate your business growth." />
-    
-    <!-- Cross-Browser & Mobile Meta Tags (iOS, Android, Chrome, Safari, Firefox, Edge, Brave) -->
-    <meta name="theme-color" content="#090d16" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  </head>
-  <body class="bg-brand-dark text-slate-100 antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Spark Flow | Custom Web Apps & AI Workflow Agents</title>
+  <meta name="description"
+    content="We engineer bespoke high-performance web platforms, autonomous AI workflow agents, and n8n pipelines to automate your business operations and accelerate growth." />
+  <meta name="keywords"
+    content="Spark Flow, custom web applications, AI agents, workflow automation, n8n, AI workflow, React, Next.js, business automation, Gemini AI" />
+  <meta name="author" content="Spark Flow" />
+  <link rel="canonical" href="https://sparkflow-eg.com" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Discord) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sparkflow-eg.com" />
+  <meta property="og:site_name" content="Spark Flow" />
+  <meta property="og:title" content="Spark Flow | Custom Web Apps & AI Workflow Agents" />
+  <meta property="og:description"
+    content="Stop losing hours to repetitive manual click-work. We engineer slick high-performance web platforms and autonomous AI workflow agents that run your business on autopilot." />
+  <meta property="og:image" content="https://sparkflow-eg.com/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://sparkflow-eg.com" />
+  <meta name="twitter:title" content="Spark Flow | Custom Web Apps & AI Workflow Agents" />
+  <meta name="twitter:description"
+    content="We engineer bespoke high-performance web platforms and autonomous AI workflow agents that run your business on autopilot." />
+  <meta name="twitter:image" content="https://sparkflow-eg.com/og-preview.png" />
+
+  <!-- Cross-Browser & Mobile Meta Tags (iOS, Android, Chrome, Safari, Firefox, Edge, Brave) -->
+  <meta name="theme-color" content="#090d16" />
+  <meta name="msapplication-TileColor" content="#090d16" />
+  <meta name="msapplication-navbutton-color" content="#090d16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Spark Flow" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- JSON-LD Structured Data Schema (SEO) -->
+  <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://sparkflow-eg.com/#organization",
+            "name": "Spark Flow",
+            "url": "https://sparkflow-eg.com",
+            "email": "sparkfloweg@gmail.com",
+            "logo": "https://sparkflow-eg.com/favicon.svg",
+            "description": "Bespoke high-performance web platforms, autonomous AI workflow agents, and n8n pipelines.",
+            "sameAs": [
+              "https://sparkflow-eg.com"
+            ]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://sparkflow-eg.com/#service",
+            "name": "Spark Flow Web & AI Automation Studio",
+            "url": "https://sparkflow-eg.com",
+            "telephone": "+201012345678",
+            "priceRange": "$$",
+            "email": "sparkfloweg@gmail.com",
+            "serviceType": [
+              "Custom Web Application Development",
+              "Autonomous AI Agent Engineering",
+              "n8n Workflow Automation",
+              "Internal Business Dashboards"
+            ],
+            "areaServed": "Worldwide"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Spark Flow AI Assistant",
+            "operatingSystem": "Web",
+            "applicationCategory": "BusinessApplication",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="bg-brand-dark text-slate-100 antialiased overflow-x-hidden selection:bg-brand-accent selection:text-white">
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

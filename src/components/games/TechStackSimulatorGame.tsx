@@ -246,11 +246,10 @@ export const TechStackSimulatorGame: React.FC = () => {
                     if (isSelected) handleRemoveTech(tech.id);
                     else handleAddTech(tech);
                   }}
-                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-cyan-950/40 border-cyan-500 text-white shadow-lg shadow-cyan-500/10'
-                      : 'bg-slate-800/80 hover:bg-slate-800 border-white/10 hover:border-cyan-500/40'
-                  }`}
+                  className={`p-3.5 rounded-xl border transition-all cursor-pointer ${isSelected
+                    ? 'bg-cyan-950/40 border-cyan-500 text-white shadow-lg shadow-cyan-500/10'
+                    : 'bg-slate-800/80 hover:bg-slate-800 border-white/10 hover:border-cyan-500/40'
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">

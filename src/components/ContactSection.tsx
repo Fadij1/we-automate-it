@@ -12,13 +12,61 @@ export const ContactSection: React.FC = () => {
     message: '',
   });
 
+  const [prefilledRoi, setPrefilledRoi] = useState<{ savings: number; hours: number } | null>(null);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Listen for ROI Calculator auto-fill events
+  React.useEffect(() => {
+    const handlePrefill = (e: any) => {
+      const { annualSavings, hoursReclaimed, message, scope } = e.detail || {};
+      if (message) {
+        setFormData((prev) => ({
+          ...prev,
+          message,
+          projectScope: scope || prev.projectScope,
+        }));
+        if (annualSavings) {
+          setPrefilledRoi({ savings: annualSavings, hours: hoursReclaimed });
+        }
+      }
+    };
+
+    window.addEventListener('sparkflow:prefill_contact', handlePrefill);
+    return () => window.removeEventListener('sparkflow:prefill_contact', handlePrefill);
+  }, []);
+
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('submitting');
     setErrorMsg('');
+
+    if (!formData.name.trim()) {
+      setStatus('error');
+      setErrorMsg('Please enter your name.');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setStatus('error');
+      setErrorMsg('Please enter a valid email address (e.g., alex@company.com).');
+      return;
+    }
+
+    if (!formData.phone.trim() || formData.phone.trim().length < 4) {
+      setStatus('error');
+      setErrorMsg('Please enter a valid phone number.');
+      return;
+    }
+
+    if (!formData.message.trim()) {
+      setStatus('error');
+      setErrorMsg('Please tell us a little bit about your project or automation goal.');
+      return;
+    }
+
+    setStatus('submitting');
 
     const fullPhoneNumber = `${countryCode} ${formData.phone.trim()}`;
 
@@ -27,10 +75,10 @@ export const ContactSection: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
           phone: fullPhoneNumber,
-          message: `[Scope: ${formData.projectScope}] - ${formData.message}`,
+          message: `[Scope: ${formData.projectScope}] - ${formData.message.trim()}`,
         }),
       });
 
@@ -44,23 +92,23 @@ export const ContactSection: React.FC = () => {
           message: '',
         });
       } else {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({ error: '' }));
         setStatus('error');
-        setErrorMsg(data.error || 'Failed to submit form. Please check your network.');
+        setErrorMsg(data.error || 'Unable to deliver message right now. Please email sparkfloweg@gmail.com directly.');
       }
     } catch (err) {
       setStatus('error');
-      setErrorMsg('Network error. Please try again or check connection.');
+      setErrorMsg('Network error. Please check your connection or email sparkfloweg@gmail.com directly.');
     }
   };
 
   return (
-    <section id="contact" className="py-24 bg-brand-dark relative overflow-hidden">
+    <section id="contact" className="py-16 bg-brand-dark relative overflow-hidden">
       {/* Background glow circle */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-brand-accent/10 rounded-full blur-[150px] pointer-events-none"></div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-8">
           <span className="inline-block py-1 px-4 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-wider mb-4">
             Worldwide Availability
           </span>
@@ -70,6 +118,27 @@ export const ContactSection: React.FC = () => {
           <p className="mt-4 text-slate-400 text-base">
             Tell us about your custom web application or AI agent needs. We will architect a custom roadmap for your team anywhere in the world.
           </p>
+
+          {/* Contact Direct Info Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+            <a
+              href="mailto:sparkfloweg@gmail.com"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-cyan-300 border border-white/10 hover:border-cyan-500/40 text-xs font-semibold transition"
+            >
+              <Mail className="w-4 h-4 text-cyan-400" />
+              <span>sparkfloweg@gmail.com</span>
+            </a>
+
+            <a
+              href="https://sparkflow-eg.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-indigo-500/20 text-indigo-300 border border-white/10 hover:border-indigo-500/40 text-xs font-semibold transition font-mono"
+            >
+              <Send className="w-3.5 h-3.5 text-indigo-400" />
+              <span>sparkflow-eg.com</span>
+            </a>
+          </div>
         </div>
 
         {/* Form Container */}
@@ -81,7 +150,7 @@ export const ContactSection: React.FC = () => {
               </div>
               <h3 className="text-2xl font-bold text-white">Message Delivered Successfully! 🎉</h3>
               <p className="text-slate-300 text-sm max-w-md mx-auto">
-                Thank you for reaching out to <strong>We Automate It</strong>. Our solution architects will review your submission and contact you within 24 hours.
+                Thank you for reaching out to <strong>Spark Flow</strong>. Our solution architects will review your submission and contact you within 24 hours.
               </p>
               <button
                 onClick={() => setStatus('idle')}
@@ -180,9 +249,17 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                  Project Details / Bottlenecks *
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                    Project Details / Bottlenecks *
+                  </label>
+                  {prefilledRoi && (
+                    <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse">
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>ROI Savings Loaded: ${prefilledRoi.savings.toLocaleString()}/yr</span>
+                    </span>
+                  )}
+                </div>
                 <div className="relative">
                   <MessageSquare className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                   <textarea
